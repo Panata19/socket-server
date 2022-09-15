@@ -41,6 +41,9 @@ export default class Server{
 
             //Mnesaje 
             socket.mensaje(cliente,this.io);
+
+            //Configurar usuario
+            socket.configurarUsuario(cliente,this.io);
         
         })
         
