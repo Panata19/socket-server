@@ -42,7 +42,7 @@ export default class Server{
             socket.configurarUsuario(cliente,this.io);
             
             //Desconectar 
-            socket.desconectar(cliente);
+            socket.desconectar(cliente, this.io);
 
             //Mensaje 
             socket.mensaje(cliente,this.io);

@@ -11,11 +11,13 @@ export const conectarCliente = (cliente: Socket)=>{
 }
 
 
-export const desconectar = (cliente: Socket) =>{
+export const desconectar = (cliente: Socket, io: socketIO.Server) =>{
 
     cliente.on('disconnect',()=>{
         console.log('Cliente desconectado')
         usuariosConectados.borrarUsuario(cliente.id);
+
+        io.emit('usuarios-activos', usuariosConectados.getLista())
     })
 }
 
