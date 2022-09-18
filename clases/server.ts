@@ -35,7 +35,7 @@ export default class Server{
         this.io.on('connection', cliente =>{
         
             //Conectar cliente
-            socket.conectarCliente(cliente);
+            socket.conectarCliente(cliente, this.io);
 
 
             //Configurar usuario
@@ -46,6 +46,9 @@ export default class Server{
 
             //Mensaje 
             socket.mensaje(cliente,this.io);
+
+            // obtener Usuario
+            socket.obtenerUsuario(cliente,this.io);
 
         
         })
