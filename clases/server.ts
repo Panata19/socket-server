@@ -3,6 +3,8 @@ import { SERVER_PORT } from "../global/enviroments";
 import socketIO from 'socket.io'
 import http from 'http'
 import * as socket from '../sockets/sockets'
+const cors = require('cors')
+
 export default class Server{
 
     private static _instance: Server;
@@ -11,11 +13,14 @@ export default class Server{
 
     public io: socketIO.Server;
     private httpServer: http.Server;
+
+
     private constructor (){
         this.app = express();
         this.port = SERVER_PORT;
         this.httpServer = new http.Server( this.app);
 
+        this.app.use(cors());
         this.io=require("socket.io")(this.httpServer, {
             cors: {
                 origin: true,

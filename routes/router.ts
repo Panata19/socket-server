@@ -1,35 +1,50 @@
 import { Router, Request, Response} from 'express'
 import { Socket } from 'socket.io';
+import { Encuenta } from '../clases/encuenta';
+import { GraficaData } from '../clases/grafica';
 import Server from '../clases/server';
 import { usuariosConectados } from '../sockets/sockets';
 
 const router = Router();
 
-// router.get('/mensajes',(req: Request, res: Response) =>{
-//     res.json({
-//         ok: true,
-//         mensaje: 'Todo esta bien'
-//     })
-// })
+const grafica = new GraficaData();
+const encuenta = new Encuenta();
 
-router.post('/mensajes',(req: Request, res: Response) =>{
+router.get('/encuesta',(req: Request, res: Response) =>{
+    res.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.json(encuenta.getDataEncuenta())
+})
 
-    const cuerpo = req.body.cuerpo;
-    const de = req.body.de
+router.post('/encuesta',(req: Request, res: Response) =>{
 
-    const payload = {
-        de,
-        cuerpo
-    }
+    const id:number = Number(req.body.id);
+    const unidades: number = Number( req.body.unidades);
+
+    encuenta.addRespuesta(id, unidades)
 
     const server = Server.instance;
-    server.io.emit('mensaje-nuevo', payload);
+    server.io.emit('cambio-respuesta', encuenta.getDataEncuenta());
 
-    res.json({
-        ok: true,
-        cuerpo,
-        de
-    })
+    res.json(encuenta.getDataEncuenta())
+})
+
+
+router.get('/grafica',(req: Request, res: Response) =>{
+    res.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.json(grafica.getDataGrafica())
+})
+
+router.post('/grafica',(req: Request, res: Response) =>{
+
+    const mes:string = req.body.mes;
+    const unidades: number = Number( req.body.unidades);
+
+    grafica.incrementarValor(mes, unidades);
+
+    const server = Server.instance;
+    server.io.emit('cambio-grafica', grafica.getDataGrafica());
+
+    res.json(grafica.getDataGrafica())
 })
 
 router.post('/mensajes/:id',(req: Request, res: Response) =>{
